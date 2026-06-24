@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Something Special 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: linear-gradient(to right, #ffdde1, #ee9ca7);
+      color: white;
+      padding: 40px;
+    }
+
+    .card {
+      max-width: 600px;
+      margin: auto;
+      background: rgba(0,0,0,0.2);
+      padding: 25px;
+      border-radius: 15px;
+    }
+
+    h1 {
+      font-size: 26px;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    button {
+      padding: 14px 28px;
+      margin: 15px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .yes {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .no {
+      background: #f44336;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h1>💖 A small note from a citizen</h1>
+
+  <p>
+    A small note from a citizen who has happily surrendered his emotional territory.
+    <br><br>
+
+    We haven't spent a lot of time together, and if someone looked at the calendar,
+    they might say it's too little time to feel anything meaningful.
+    <br><br>
+
+    But the strange thing is, the little time I have spent with you has felt genuinely special.
+    Some conversations stay in memory longer than others, some people leave a deeper impression,
+    and somehow you became one of those people.
+    <br><br>
+
+    I feel like our vibe matches naturally. The conversations flow, the humour matches,
+    the random bakchodi matches, and being around you simply makes ordinary moments better.
+    <br><br>
+
+    Whenever I talk to you, I find myself smiling more. Not because something extraordinary happened,
+    but because your presence has a way of making things lighter and happier.
+    <br><br>
+
+    I’m not making grand promises or dramatic declarations. I just know that if the moments
+    we’ve already shared are this valuable, I’d love the chance to create many more of them.
+    <br><br>
+
+    So, with full respect and complete honesty, I have one question:
+    <br><br>
+
+    <b>If you want I can give you the GitHub as well or give me the HTML file and then guide me to host it</b>
+    <br><br>
+
+    And yes… calling you <b>“<entity type="politician">Mamata Banerjee</entity>, CM of my heart</b> 💖
+  </p>
+
+  <br>
+
+  <button class="yes" onclick="sendResponse('YES')">YES 💖</button>
+  <button class="no" onclick="sendResponse('NO')">NO 😔</button>
+
+</div>
+
+<script>
+function sendResponse(answer) {
+  fetch("https://formspree.io/f/maqgqvzl", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: "She clicked: " + answer
+    })
+  });
+
+  if(answer === "YES"){
+    alert("Yay 💖 Response sent!");
+  } else {
+    alert("Response recorded 😔");
+  }
+}
+</script>
+
+</body>
+</html>
