@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Something Special 💖</title>
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: white;
+  }
+
+  .card {
+    width: 90%;
+    max-width: 600px;
+    background: rgba(0,0,0,0.25);
+    padding: 25px;
+    border-radius: 16px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+  }
+
+  button {
+    padding: 12px 25px;
+    margin: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .yes { background: #4CAF50; color: white; }
+  .no { background: #f44336; color: white; }
+
+  /* MODAL */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    background: white;
+    color: black;
+    padding: 20px;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 320px;
+    text-align: center;
+    animation: pop 0.25s ease;
+  }
+
+  @keyframes pop {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  input {
+    width: 90%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+
+  .send {
+    margin-top: 10px;
+    padding: 10px;
+    background: black;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  /* Hearts */
+  .heart {
+    position: absolute;
+    font-size: 20px;
+    animation: floatUp 2s linear forwards;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-250px); opacity: 0; }
+  }
+
+  /* Celebration text */
+  .big {
+    font-size: 22px;
+    font-weight: bold;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>💖 A Small Note</h1>
+  <p>You made ordinary moments feel special…</p>
+
+  <button class="yes" onclick="handleYes()">YES 💖</button>
+  <button class="no" onclick="handleNo()">NO 😏</button>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="popup">
+  <div class="modal-content">
+    <h3 id="msg">Response</h3>
+    <input type="text" id="reason" placeholder="Tell me the reason 💭"/>
+    <div class="send" onclick="sendData()">Send 💌</div>
+  </div>
+</div>
+
+<script>
+let response = "";
+
+// YES flow
+function handleYes(){
+  response = "YES";
+  document.getElementById("msg").innerHTML = "Yay 💖 You made me happy!";
+  document.getElementById("popup").style.display = "flex";
+  createHearts();
+}
+
+// NO flow (playful screen, not blocking)
+function handleNo(){
+  response = "NO";
+  document.getElementById("msg").innerHTML =
+    "Are you really sure? 🥺💔";
+  document.getElementById("popup").style.display = "flex";
+}
+
+// send to form
+function sendData(){
+  const reason = document.getElementById("reason").value;
+
+  fetch("https://formspree.io/f/maqgqvzl", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      response: response,
+      reason: reason
+    })
+  });
+
+  document.getElementById("popup").style.display = "none";
+  document.getElementById("reason").value = "";
+}
+
+// floating hearts
+function createHearts(){
+  for(let i=0;i<20;i++){
+    let h = document.createElement("div");
+    h.className = "heart";
+    h.innerHTML = "💖";
+    h.style.left = Math.random()*100 + "%";
+    h.style.top = "80%";
+    document.body.appendChild(h);
+
+    setTimeout(()=>h.remove(), 2000);
+  }
+}
+</script>
+
+</body>
+</html>
