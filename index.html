@@ -203,7 +203,7 @@ function send(){
 
   const div = document.createElement("div");
   div.className = "msg me";
-  div.innerHTML = `<b>Avinash (PJC)</b><br>${msg}`;
+  div.innerHTML = `<b>You</b><br>${msg}`;
 
   chat.appendChild(div);
   scrollDown();
@@ -212,7 +212,7 @@ function send(){
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      name: "Avinash (PJC)",
+      name: "Akhiee",
       message: msg
     })
   });
