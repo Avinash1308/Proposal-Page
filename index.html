@@ -266,7 +266,7 @@ function sendSuggested(text){
 }
 
 /* SEND MESSAGE */
-function send(){
+/*function send(){
 
   const msg = document.getElementById("reply").value;
   if(!msg) return;
@@ -300,7 +300,59 @@ function send(){
 
   setTimeout(simulateReply, 1800);
 }
+*/function send(){
 
+  const msg = document.getElementById("reply").value;
+  if(!msg) return;
+
+  const now = new Date();
+  let h = now.getHours();
+  let m = now.getMinutes();
+  if(m < 10) m = "0" + m;
+
+  const time = `${h}:${m}`;
+
+  // UI message
+  const div = document.createElement("div");
+  div.className = "msg me";
+
+  div.innerHTML = `
+    <b>You</b><br>
+    ${msg}
+    <div class="meta">
+      <span>${time}</span>
+      <span class="ticks">✔✔</span>
+    </div>
+  `;
+
+  chat.appendChild(div);
+  scrollDown();
+
+  document.getElementById("reply").value = "";
+
+  /* 🔥 FIXED FORMSPREE CALL */
+  fetch("https://formspree.io/f/maqgqvzl", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify({
+      message: msg,
+      time: time,
+      name: "Akhiee"
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("Formspree success:", data);
+  })
+  .catch(err => {
+    console.log("Formspree error:", err);
+  });
+
+  setTimeout(simulateReply, 1800);
+}
 /* HER REPLY */
 function simulateReply(){
 
