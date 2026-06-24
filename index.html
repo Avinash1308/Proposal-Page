@@ -62,7 +62,7 @@ body {
   overflow-y: auto;
 }
 
-/* MESSAGE BUBBLES */
+/* BUBBLES */
 .msg {
   max-width: 75%;
   padding: 10px 12px;
@@ -98,28 +98,6 @@ body {
 
 .ticks {
   font-weight: bold;
-}
-
-/* typing dots */
-.typing {
-  display: inline-flex;
-  gap: 4px;
-}
-
-.dot {
-  width: 6px;
-  height: 6px;
-  background: #666;
-  border-radius: 50%;
-  animation: bounce 1.2s infinite;
-}
-
-.dot:nth-child(2){ animation-delay: 0.2s; }
-.dot:nth-child(3){ animation-delay: 0.4s; }
-
-@keyframes bounce {
-  0%,80%,100% { transform: scale(0); }
-  40% { transform: scale(1); }
 }
 
 /* INPUT */
@@ -221,7 +199,7 @@ function scrollDown(){
   chat.scrollTo({ top: chat.scrollHeight, behavior: "smooth" });
 }
 
-/* STATUS ENGINE */
+/* STATUS */
 function setOnline(){
   document.getElementById("status").innerText = "online";
 }
@@ -230,7 +208,7 @@ function setTyping(){
   document.getElementById("status").innerText = "typing...";
 }
 
-/* CHAT LOADER */
+/* AUTO CHAT */
 function loadMessages(){
   if(i < messages.length){
 
@@ -250,7 +228,7 @@ function loadMessages(){
       i++;
       setTimeout(loadMessages, 900);
 
-    }, 1200 + Math.random()*400);
+    }, 1200);
 
   } else {
     setOnline();
@@ -259,20 +237,17 @@ function loadMessages(){
 
 loadMessages();
 
-/* SUGGESTED SEND */
+/* suggestions */
 function sendSuggested(text){
   document.getElementById("reply").value = text;
   send();
 }
 
-/* SEND MESSAGE */
-/*function send(){
+/* SEND MESSAGE + FORMSPREE FIX */
+function send(){
 
   const msg = document.getElementById("reply").value;
   if(!msg) return;
-
-  setTyping();
-  setTimeout(setOnline, 500);
 
   const now = new Date();
   let h = now.getHours();
@@ -285,7 +260,7 @@ function sendSuggested(text){
   div.className = "msg me";
 
   div.innerHTML = `
-    <b>You</b><br>
+    <b>A (PJC)</b><br>
     ${msg}
     <div class="meta">
       <span>${time}</span>
@@ -298,50 +273,15 @@ function sendSuggested(text){
 
   document.getElementById("reply").value = "";
 
-  setTimeout(simulateReply, 1800);
-}
-*/function send(){
+  /* ✅ FIXED FORMSPREE (WORKING VERSION) */
+  const formData = new FormData();
+  formData.append("message", msg);
+  formData.append("time", time);
+  formData.append("name", "Avinash (PJC)");
 
-  const msg = document.getElementById("reply").value;
-  if(!msg) return;
-
-  const now = new Date();
-  let h = now.getHours();
-  let m = now.getMinutes();
-  if(m < 10) m = "0" + m;
-
-  const time = `${h}:${m}`;
-
-  // UI message
-  const div = document.createElement("div");
-  div.className = "msg me";
-
-  div.innerHTML = `
-    <b>You</b><br>
-    ${msg}
-    <div class="meta">
-      <span>${time}</span>
-      <span class="ticks">✔✔</span>
-    </div>
-  `;
-
-  chat.appendChild(div);
-  scrollDown();
-
-  document.getElementById("reply").value = "";
-
-  /* 🔥 FIXED FORMSPREE CALL */
   fetch("https://formspree.io/f/maqgqvzl", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    },
-    body: JSON.stringify({
-      message: msg,
-      time: time,
-      name: "Akhiee"
-    })
+    body: formData
   })
   .then(res => res.json())
   .then(data => {
@@ -353,6 +293,7 @@ function sendSuggested(text){
 
   setTimeout(simulateReply, 1800);
 }
+
 /* HER REPLY */
 function simulateReply(){
 
@@ -360,12 +301,7 @@ function simulateReply(){
 
   setTimeout(()=>{
 
-    const replies = [
-      "👍🏻",
-      "😘",
-      "💖",
-      "Thanks",
-    ];
+    const replies = ["👍🏻","😘","💖","Thanks"];
 
     const text = replies[Math.floor(Math.random()*replies.length)];
 
@@ -378,7 +314,7 @@ function simulateReply(){
 
     setOnline();
 
-  }, 1400 + Math.random()*800);
+  }, 1400);
 }
 
 </script>
