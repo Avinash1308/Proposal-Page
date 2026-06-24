@@ -29,20 +29,47 @@ body {
 .header {
   background: #075e54;
   color: white;
-  padding: 12px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.name { font-weight: bold; }
-.status { font-size: 12px; opacity: 0.8; }
+.dp {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #25d366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 18px;
+}
 
-/* MESSAGES */
+.headerText {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-weight: bold;
+}
+
+.status {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* CHAT AREA */
 .messages {
   flex: 1;
   padding: 12px;
   overflow-y: auto;
 }
 
-/* BUBBLES */
+/* MESSAGE */
 .msg {
   max-width: 75%;
   padding: 10px 12px;
@@ -53,13 +80,31 @@ body {
   white-space: pre-wrap;
 }
 
-.them { background: white; }
+.them {
+  background: white;
+}
+
 .me {
   background: #dcf8c6;
   margin-left: auto;
 }
 
-/* typing bubble */
+/* META */
+.meta {
+  margin-top: 4px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  font-size: 11px;
+  color: #667781;
+  align-items: center;
+}
+
+.ticks {
+  font-weight: bold;
+}
+
+/* typing dots */
 .typing {
   display: inline-flex;
   gap: 4px;
@@ -94,14 +139,13 @@ input {
   border-radius: 20px;
   border: none;
   outline: none;
-  font-size: 14px;
 }
 
 button {
   margin-left: 8px;
-  padding: 10px 14px;
   border: none;
   border-radius: 20px;
+  padding: 10px 14px;
   background: #075e54;
   color: white;
 }
@@ -114,8 +158,11 @@ button {
 
   <!-- HEADER -->
   <div class="header">
-    <div class="name">💖 Avinash (PJC)</div>
-    <div class="status">online</div>
+    <div class="dp">A</div>
+    <div class="headerText">
+      <div class="name">💖 Avinash (PJC)</div>
+      <div class="status" id="status">online</div>
+    </div>
   </div>
 
   <!-- CHAT -->
@@ -123,13 +170,15 @@ button {
 
   <!-- INPUT -->
   <div class="inputBox">
-    <input id="reply" placeholder="Type your reply..." />
+    <input id="reply" placeholder="Type a message..." />
     <button onclick="send()">Send</button>
   </div>
 
 </div>
 
 <script>
+
+const chat = document.getElementById("chat");
 
 const messages = [
   "Hey Mamta Banerjee 💖",
@@ -140,44 +189,32 @@ const messages = [
   "Whenever I am with you, I forget all world tension and feel happy & light 😊",
   "In such a short time, we created so many funny memories 💭",
   "I don’t want this to stop here… I want this journey for life 💖",
-  "I would like to elect you as the CM of my heart 👑"
+  "I would like to elect you as the CM of my heart 👑",
+  "waiting for for reply..."
 ];
 
 let i = 0;
-const chat = document.getElementById("chat");
 
 function scrollDown(){
-  chat.scrollTop = chat.scrollHeight;
+  chat.scrollTo({ top: chat.scrollHeight, behavior: "smooth" });
 }
 
-/* show typing indicator */
-function showTyping(cb){
-  const typing = document.createElement("div");
-  typing.className = "msg them";
-  typing.id = "typingBox";
-
-  typing.innerHTML = `
-    <div class="typing">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
-  `;
-
-  chat.appendChild(typing);
-  scrollDown();
-
-  setTimeout(()=>{
-    typing.remove();
-    cb();
-  }, 1200);
+/* STATUS CONTROL */
+function setOnline(){
+  document.getElementById("status").innerText = "online";
 }
 
-/* load messages like real chat */
+function setTyping(){
+  document.getElementById("status").innerText = "typing...";
+}
+
+/* LOAD MESSAGES WITH CORRECT STATUS FLOW */
 function loadMessages(){
   if(i < messages.length){
 
-    showTyping(()=>{
+    setTyping();
+
+    setTimeout(()=>{
 
       const div = document.createElement("div");
       div.className = "msg them";
@@ -186,24 +223,47 @@ function loadMessages(){
       chat.appendChild(div);
       scrollDown();
 
+      setOnline();
+
       i++;
-      setTimeout(loadMessages, 700);
+      setTimeout(loadMessages, 900);
 
-    });
+    }, 1200);
 
+  } else {
+    document.getElementById("status").innerText = "last seen recently";
   }
 }
 
 loadMessages();
 
-/* send message */
+/* SEND MESSAGE */
 function send(){
+
   const msg = document.getElementById("reply").value;
   if(!msg) return;
 
+  setTyping();
+  setTimeout(setOnline, 800);
+
+  const now = new Date();
+  let h = now.getHours();
+  let m = now.getMinutes();
+  if(m < 10) m = "0" + m;
+
+  const time = `${h}:${m}`;
+
   const div = document.createElement("div");
   div.className = "msg me";
-  div.innerHTML = `<b>You</b><br>${msg}`;
+
+  div.innerHTML = `
+    <b>You</b><br>
+    ${msg}
+    <div class="meta">
+      <span>${time}</span>
+      <span class="ticks">✔✔</span>
+    </div>
+  `;
 
   chat.appendChild(div);
   scrollDown();
@@ -213,7 +273,8 @@ function send(){
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       name: "Akhiee",
-      message: msg
+      message: msg,
+      time: time
     })
   });
 
