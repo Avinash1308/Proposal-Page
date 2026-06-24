@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>CM of My Heart 💖</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial;
+  background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom);
+}
+
+.card {
+  width: 100%;
+  max-width: 520px;
+  background: rgba(0,0,0,0.35);
+  border-radius: 18px;
+  padding: 18px;
+  color: white;
+  backdrop-filter: blur(12px);
+}
+
+h1 {
+  font-size: 20px;
+}
+
+#text {
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  min-height: 260px;
+}
+
+/* blinking cursor */
+.cursor {
+  display: inline-block;
+  width: 10px;
+  background: white;
+  margin-left: 2px;
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+textarea {
+  width: 100%;
+  height: 120px;
+  margin-top: 12px;
+  border-radius: 12px;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  resize: none;
+}
+
+button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: #4CAF50;
+  color: white;
+  font-size: 16px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h1>💖 Hey My Dear Mamta Banerjee</h1>
+
+  <div id="text"></div>
+
+  <textarea id="msg" placeholder="Write your reply... 💭"></textarea>
+
+  <button onclick="send()">Send 💌</button>
+
+</div>
+
+<script>
+const fullText = `When we first met, I wasn’t sure how important you would become in my life… 😄
+
+But slowly I realized something special.
+
+We have the same vibe, same bakchodi energy, and I really admire your simplicity and nature.
+
+Whenever I am with you, I forget all world tension and feel genuinely happy and light.
+
+In such a short time, we created so many funny memories and moments 💭
+
+I don’t want this to stop here… I want this journey for life 💖
+
+Would like to elect you as the CM of my heart 👑`;
+
+let i = 0;
+const speed = 25;
+
+function typeWriter() {
+  if (i < fullText.length) {
+    document.getElementById("text").innerHTML =
+      fullText.substring(0, i + 1) + '<span class="cursor"></span>';
+    i++;
+    setTimeout(typeWriter, speed);
+  }
+}
+
+typeWriter();
+
+function send(){
+  const message = document.getElementById("msg").value;
+
+  fetch("https://formspree.io/f/maqgqvzl", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message })
+  });
+
+  alert("Message sent 💖");
+  document.getElementById("msg").value = "";
+}
+</script>
+
+</body>
+</html>
